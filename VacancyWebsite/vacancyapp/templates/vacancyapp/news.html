@@ -1,0 +1,79 @@
+{% extends 'vacancyapp/base.html' %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row" style="margin-top:30px;">
+        <div class="col-sm-8">
+            {% for new in news %}
+            <div class="card" style="margin-top: 25px;">
+
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <a href="{{ new.link }}" class="card-link">
+                                <img src="{{new.image_link}}" alt="article image" width="150" height="150">
+                            </a>
+                        </div>
+                        <div class="col-sm-9">
+                            <a href="{{ new.link }}" class="card-link">
+                                <h5 class="card-title">{{ new.title }}</h5>
+                            </a>
+                            <h6 class="card-subtitle mb-2 text-muted">{{ new.site }}</h6>
+                            <p class="card-text">{{ new.description }}</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="col-sm-4">
+            <div class="form-group row" style="margin-top:25px;">
+                <div class="col-10">
+                    <input name="search" type="text" class="form-control" placeholder="Search for vacancy">
+                </div>
+            </div>
+            <button class="btn btn-success">Search</button>
+            {%for month in news%}
+                <a href="{% url 'article_year_archive' month.scrapped_date|date:'Y' 'may' %}">{{month.scrapped_date}}</a>
+                {% endfor %}
+        </div>
+    </div>
+</div>
+{% if news.has_other_pages %}
+<nav aria-label="Page navigation example" style="margin-top:50px;">
+    <ul class="pagination justify-content-center">
+        {% if news.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ news.previous_page_number }}" tabindex="-1">Previous</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1">Previous</a>
+        </li>
+        {% endif %}
+
+        {% for i in news.paginator.page_range %}
+        {% if news.number == i %}
+        <li class="page-item active"><a class="page-link active" href="#">{{i}}</a></li>
+        {% else %}
+        <li class="page-item"><a class="page-link" href="?page={{ i }}">{{i}}</a></li>
+        {% endif %}
+        {% endfor %}
+
+        {% if news.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ news.next_page_number }}">Next</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" href="#">Next</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+
+{% endblock%}

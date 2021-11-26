@@ -1,0 +1,89 @@
+{% extends 'vacancyapp/base.html' %}
+
+
+{% block content %}
+<div class="container">
+    <div class="row" style="margin-top:30px;">
+        <div class="col-sm-8">
+            {% for new in news %}
+            <div class="card" style="margin-top: 25px;">
+
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <a href="{{ new.link }}" class="card-link">
+                                <img src="{{new.image_link}}" alt="article image" width="150" height="150">
+                            </a>
+                        </div>
+                        <div class="col-sm-9">
+                            <a href="{{ new.link }}" class="card-link">
+                                <h5 class="card-title">{{ new.title }}</h5>
+                            </a>
+                            <h6 class="card-subtitle mb-2 text-muted">{{ new.site }}</h6>
+                            <p class="card-text">{{ new.description }}</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="col-sm-4">
+            <div class="form-group row" style="margin-top:25px;">
+                <div class="col-10">
+                    <input name="search" type="text" class="form-control" placeholder="Search for vacancy">
+                </div>
+            </div>
+            <button class="btn btn-success">Search</button>
+            {% for article in object_list %}
+            <a href="{% url 'article_year_archive' article.scrapped_date|date:'Y' 'may' %}">{{article.scrapped_date}}</a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<ul>
+    {% for article in object_list %}
+    <li>{{ article.scrapped_date|date:"F j, Y" }}: {{ article.title }}</li>
+    {% endfor %}
+</ul>
+
+<p>
+    {% if previous_month %}
+    Previous Month: {{ previous_month|date:"F Y" }}
+    {% endif %}
+    {% if next_month %}
+    Next Month: {{ next_month|date:"F Y" }}
+    {% endif %}
+</p>
+{% if is_paginated%}
+
+<div class="offset-sm-3">
+    {% if page_obj.has_previous %}
+    <a href="?page={{page_obj.previous_page_number}}" class="btn btn-info mb-4">Previous</a>
+    {% else %}
+    <a href="?no-page" class="btn btn-outline-info mb-4 disabled">Previous</a>
+    {% endif %}
+
+    {% for num in page_obj.paginator.page_range %}
+    {% if page_obj.number == num%}
+    <a href="?current-page " class="btn btn-info mb-4">{{ num }}</a>
+    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+    <a href="?page={{ num }} " class="btn btn-outline-info mb-4">{{ num }}</a>
+    {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+    <a href="?page={{page_obj.next_page_number}}" class="btn btn-info mb-4">Next</a>
+    {% else %}
+    <a href="?no-page" class="btn btn-outline-info mb-4 disabled">Next</a>
+    {% endif %}
+</div>
+
+{% endif %}
+
+{% endblock%}
+
+
+
+

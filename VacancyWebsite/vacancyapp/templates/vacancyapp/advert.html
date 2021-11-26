@@ -1,0 +1,65 @@
+{% extends 'vacancyapp/base.html' %}
+
+
+{% block content %}
+
+<div class="container">
+    <div class="row" style="margin-top:30px;">
+        <div class="col-sm-8">
+            {% for advert in adverts %}
+            <div class="card" style="margin-top: 25px;">
+                <div class="card-body">
+                    <h5 class="card-title">{{ advert.name }}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{ advert.company }}</h6>
+                    <span class="card-text"> Posted: {{ advert.posted_date }}</span>
+                    <a href="{{ advert.link }}" class="card-link float-right">Download</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="col-sm-4">
+            <div class="form-group row" style="margin-top:25px;">
+                <div class="col-10">
+                    <input name="search" type="text" class="form-control" placeholder="Search for vacancy">
+                </div>
+            </div>
+            <button class="btn btn-success">Search</button>
+        </div>
+    </div>
+</div>
+{% if adverts.has_other_pages %}
+<nav aria-label="Page navigation example" style="margin-top:50px;">
+    <ul class="pagination justify-content-center">
+        {% if adverts.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ adverts.previous_page_number }}" tabindex="-1">Previous</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1">Previous</a>
+        </li>
+        {% endif %}
+
+        {% for i in adverts.paginator.page_range %}
+        {% if adverts.number == i %}
+        <li class="page-item active"><a class="page-link active" href="#">{{i}}</a></li>
+        {% else %}
+        <li class="page-item"><a class="page-link" href="?page={{ i }}">{{i}}</a></li>
+        {% endif %}
+        {% endfor %}
+
+        {% if adverts.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ adverts.next_page_number }}">Next</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" href="#">Next</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+
+{% endblock%}

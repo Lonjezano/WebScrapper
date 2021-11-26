@@ -1,0 +1,63 @@
+{% extends 'vacancyapp/base.html' %}
+
+{% block content %}
+{% if searched %}
+<h1>Search result for {{ searched }}</h1>
+{% for post in posts %}
+<div class="card" style="margin-top: 25px;">
+
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-3">
+                <a href="{{ post.link }}" class="card-link">
+                    <img src="{{post.image_link}}" alt="article image" width="150" height="150">
+                </a>
+            </div>
+            <div class="col-sm-9">
+                <a href="{{ post.link }}" class="card-link">
+                    <h5 class="card-title">{{ post.title }}</h5>
+                </a>
+                <h6 class="card-subtitle mb-2 text-muted">{{ post.site }}</h6>
+                <p class="card-text">{{ post.description }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% if posts.has_other_pages %}
+<nav aria-label="Page navigation example" style="margin-top:50px;">
+    <ul class="pagination justify-content-center">
+        {% if posts.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ posts.previous_page_number }}" tabindex="-1" >Previous</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" href="#" tabindex="-1">Previous</a>
+        </li>
+        {% endif %}
+
+        {% for i in posts.paginator.page_range %}
+        {% if posts.number == i %}
+        <li class="page-item active"><a class="page-link active" href="#">{{i}}</a></li>
+        {% else %}
+        <li class="page-item"><a class="page-link" href="?page={{ i }}">{{i}}</a></li>
+        {% endif %}
+        {% endfor %}
+
+        {% if posts.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ posts.next_page_number}}">Next</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" href="#">Next</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% else %}
+<h1>Empty search</h1>
+{% endif %}
+{% endblock%}
